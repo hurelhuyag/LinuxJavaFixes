@@ -4,17 +4,18 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 
+import java.io.ByteArrayInputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 import java.util.Properties;
 
 /**
- * Created by mikl on 08.02.14.
+ * Created by mikl on 08.02.14
  */
 public class XKeysymTransformer implements ClassFileTransformer {
     public static final String XNET_PROTOCOL = "sun/awt/X11/XKeysym";
-    public static final String PATCH_KEY_MAPPING_PROPERTIES = "patch.key.mapping.properties";
+    public static final String PATCH_KEY_MAPPING_PROPERTIES = "mn.properties";
     public static final String PRINT = "print";
     private String agentArgument;
 
@@ -25,7 +26,9 @@ public class XKeysymTransformer implements ClassFileTransformer {
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
         try {
-            return className!=null && className.equals(XNET_PROTOCOL) ? doClass(className, classBeingRedefined, classfileBuffer) : classfileBuffer;
+            return className!=null && className.equals(XNET_PROTOCOL)
+                    ? doClass(className, classBeingRedefined, classfileBuffer)
+                    : classfileBuffer;
         } catch (Throwable err) {
             err.printStackTrace();
             return classfileBuffer;
@@ -36,7 +39,7 @@ public class XKeysymTransformer implements ClassFileTransformer {
         CtClass cl = null;
         ClassPool pool = ClassPool.getDefault();
         try {
-            cl = pool.makeClass(new java.io.ByteArrayInputStream(b));
+            cl = pool.makeClass(new ByteArrayInputStream(b));
             if(agentArgument!=null && agentArgument.equals(PRINT)) {
                 CtMethod method = cl.getDeclaredMethod("getJavaKeycode");
                 method.insertBefore("System.out.println(\"LinuxJavaPatchAgent.keysym=\"+Long.toHexString($1));");
