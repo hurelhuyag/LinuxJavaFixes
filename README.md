@@ -6,11 +6,9 @@ Aimed to walkaround bug  with java gui apps: "Hotkeys not functional in non-lati
 
 ## Swing java apps (IntelliJ Idea, Oracle SQL Developer etc.)
 
-Copy to any directory 2 files:
+Copy to any directory 1 file:
 
 **LinuxJavaFixes-1.0.0-SNAPSHOT.jar**
-
-**javassist-3.12.1.GA.jar**
 
 add 
 
@@ -40,11 +38,9 @@ Add line to **idea64.vmoptions* or *idea.vmoptions**
 
 ## Eclipse
 
-Copy to any directory 2 files:
+Copy to any directory 1 files:
 
 **LinuxJavaFixes-1.0.0-SNAPSHOT.jar**
-
-**javassist-3.12.1.GA.jar**
 
 Add following line to **eclipse.ini**.
 
@@ -60,6 +56,7 @@ If you want another mapping you can create it by yourself:
   - after that utily begin print to console entered symbol codes using format
 
 `XKeysymPatchAgent.keysym=[hex code]`
+`-javaagent:[path to directory with jar files]/LinuxJavaFixes-1.0.0-SNAPSHOT.jar=swt`
 
   - then create file using format `[hex code]=[latin code of the same button]`
 
